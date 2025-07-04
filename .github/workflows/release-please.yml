@@ -10,9 +10,9 @@ on:
         type: choice
         options:
           - pckg-a
-          - pckg-b
-          - pckg-c
-          - pckg-d
+          # - pckg-b
+          # - pckg-c
+          # - pckg-d
   push:
     # Creates a release & tag when a PR is merged into main
     branches:
@@ -24,16 +24,16 @@ permissions:
 
 jobs:
   # Sequential release jobs for each package, respecting dependencies
-  # release-pckg-a:
-  #   if: github.event_name == 'workflow_dispatch'
-  #   runs-on: ubuntu-24.04
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Release pckg-a
-  #       uses: googleapis/release-please-action@v4
-  #       with:
-  #         token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-  #         path: packages/pckg-a
+  release-pckg-a:
+    # if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      # - uses: actions/checkout@v4
+      - name: Release pckg-a
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          path: packages/pckg-a
 
   # release-pckg-b:
   #   needs: release-pckg-a
@@ -86,18 +86,3 @@ jobs:
   #       with:
   #         token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
   #         path: packages/pckg-d
-  # Handles package releases on push to main branch
-  github-release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        package-folder: [pckg-a]
-        # package-folder: [pckg-a, pckg-b, pckg-c, pckg-d]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create GitHub Release and update manifest
-        uses: googleapis/release-please-action@v4
-        with:
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          path: packages/${{ matrix.package-folder }}
