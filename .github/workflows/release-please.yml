@@ -10,7 +10,7 @@ on:
         type: choice
         options:
           - pckg-a
-          # - pckg-b
+          - pckg-b
           # - pckg-c
           # - pckg-d
   push:
