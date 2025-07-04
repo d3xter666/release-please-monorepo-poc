@@ -7,6 +7,20 @@
 
 * Little fix ([c93f2da](https://github.com/d3xter666/release-please-monorepo-poc/commit/c93f2da7ca4f8311ef99217b97cd6039ce3ace9a))
 
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * pckg-a bumped from ^1.0.0 to ^1.1.2
+
+## [1.0.1](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-b-v1.0.0...pckg-b-v1.0.1) (2025-07-04)
+
+
+### Bug Fixes
+
+* Little fix ([c93f2da](https://github.com/d3xter666/release-please-monorepo-poc/commit/c93f2da7ca4f8311ef99217b97cd6039ce3ace9a))
+
 ## 1.0.0 (2025-07-04)
 
 
