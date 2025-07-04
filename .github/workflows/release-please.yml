@@ -28,6 +28,7 @@ jobs:
     outputs:
           from_pr: ${{steps.pr_check.outputs.from_pr}}
     steps:
+      - uses: actions/checkout@v4
       - name: Check if push is from a merged PR
         id: pr_check
         run: |
