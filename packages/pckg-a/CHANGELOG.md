@@ -5,6 +5,19 @@
 
 ### Features
 
+* Another feature ([4b001d5](https://github.com/d3xter666/release-please-monorepo-poc/commit/4b001d51b4dc4fd359606bc1a0ba036c66271e74))
+* Another feature for pckg A ([a58d069](https://github.com/d3xter666/release-please-monorepo-poc/commit/a58d0699b98a0fd622b550744ac4e6bb54ab4732))
+
+
+### Bug Fixes
+
+* Fixed some stuff in A ([3da45a8](https://github.com/d3xter666/release-please-monorepo-poc/commit/3da45a8bdff9ce2f4b17521410244e826d3e4645))
+
+## [1.1.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.0.0...pckg-a-v1.1.0) (2025-07-04)
+
+
+### Features
+
 * Another feature for pckg A ([a58d069](https://github.com/d3xter666/release-please-monorepo-poc/commit/a58d0699b98a0fd622b550744ac4e6bb54ab4732))
 
 
