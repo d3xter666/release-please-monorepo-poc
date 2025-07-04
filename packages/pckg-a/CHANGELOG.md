@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.1.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.0.0...pckg-a-v1.1.0) (2025-07-04)
+
+
+### Features
+
+* Another feature ([4b001d5](https://github.com/d3xter666/release-please-monorepo-poc/commit/4b001d51b4dc4fd359606bc1a0ba036c66271e74))
+* Another feature for pckg A ([a58d069](https://github.com/d3xter666/release-please-monorepo-poc/commit/a58d0699b98a0fd622b550744ac4e6bb54ab4732))
+* Another feature here! ([367f506](https://github.com/d3xter666/release-please-monorepo-poc/commit/367f50600adc5b9acbe7ebead35279f87873fa70))
+* Package A change ([0c71065](https://github.com/d3xter666/release-please-monorepo-poc/commit/0c71065a42e9c971ebdef40f0f32ab9e3b0fda45))
+* Zzz 2 ([76f605d](https://github.com/d3xter666/release-please-monorepo-poc/commit/76f605d6fe41b9b0f370a4e018adcbd420241547))
+
+
+### Bug Fixes
+
+* Fix XYZ ([3a6061e](https://github.com/d3xter666/release-please-monorepo-poc/commit/3a6061e78694f4488c9a2e2cdbb0f0ba90d90d11))
+* Fixed some stuff in A ([3da45a8](https://github.com/d3xter666/release-please-monorepo-poc/commit/3da45a8bdff9ce2f4b17521410244e826d3e4645))
+* ONe fix please! ([f85cad2](https://github.com/d3xter666/release-please-monorepo-poc/commit/f85cad29ad8d29183286151959674b6cd60d8dac))
+* Yet another fix ([ddd0936](https://github.com/d3xter666/release-please-monorepo-poc/commit/ddd0936bf267b7d5c25204ad25bc4083c2d99d70))
+* Zzzz ([b6c138b](https://github.com/d3xter666/release-please-monorepo-poc/commit/b6c138b1459d49aaaa808cf2b9f036d0d955a941))
+
 ## 1.0.0 (2025-07-04)
 
 
