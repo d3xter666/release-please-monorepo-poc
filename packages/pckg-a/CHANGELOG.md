@@ -7,6 +7,13 @@
 
 * Little fix in A ([e45b5c0](https://github.com/d3xter666/release-please-monorepo-poc/commit/e45b5c0b39d1595980e0fb672de1f0d7aef3f223))
 
+## [1.1.2](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.1.1...pckg-a-v1.1.2) (2025-07-04)
+
+
+### Bug Fixes
+
+* Little fix in A ([e45b5c0](https://github.com/d3xter666/release-please-monorepo-poc/commit/e45b5c0b39d1595980e0fb672de1f0d7aef3f223))
+
 ## [1.1.1](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.1.0...pckg-a-v1.1.1) (2025-07-04)
 
 
