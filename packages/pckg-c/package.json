@@ -1,6 +1,6 @@
 {
   "name": "pckg-c",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "license": "ISC",
   "author": "",
@@ -10,6 +10,6 @@
     "test": "echo \"Run tests for pckg-c\""
   },
   "dependencies": {
-    "pckg-b": "^1.0.2"
+    "pckg-b": "^1.2.0"
   }
 }
