@@ -39,7 +39,8 @@ jobs:
           fi
   release-pckg-a:
     needs: check-pr
-    if: needs.check-pr.outputs.from_pr == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.check-pr.outputs.from_pr == 'true' || 
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-a')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +52,8 @@ jobs:
 
   release-pckg-b:
     needs: [check-pr, release-pckg-a]
-    if: needs.check-pr.outputs.from_pr == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-b')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +65,8 @@ jobs:
 
   release-pckg-c:
     needs: [check-pr, release-pckg-b]
-    if: needs.check-pr.outputs.from_pr == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-c')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -75,7 +78,8 @@ jobs:
 
   release-pckg-d:
     needs: [check-pr, release-pckg-c]
-    if: needs.check-pr.outputs.from_pr == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
