@@ -1,11 +1,20 @@
 {
 	"plugins": ["node-workspace"],
 	"packages": {
-		"packages/pckg-a": {},
-		"packages/pckg-b": {},
-		"packages/pckg-c": {},
-		"packages/pckg-d": {}
+		"./packages/pckg-a": {
+			"package-name": "pckg-a"
+		},
+		"./packages/pckg-b": {
+			"package-name": "pckg-b"
+		},
+		"./packages/pckg-c": {
+			"package-name": "pckg-c"
+		},
+		"./packages/pckg-d": {
+			"package-name": "pckg-d"
+		}
 	},
+	"release-type": "node",
 	"pull-request-header": ":tractor: New release prepared",
 	"pull-request-title-pattern": "release:${component} v${version}",
 	"separate-pull-requests": true,
