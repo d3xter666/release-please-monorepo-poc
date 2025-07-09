@@ -11,6 +11,27 @@
 
 ### Bug Fixes
 
+* It's a fix ([b1c78a7](https://github.com/d3xter666/release-please-monorepo-poc/commit/b1c78a73dbaef8a1118567ebfc95c59b0feaf4e9))
+* Little fix. Nothing more expected ([364349d](https://github.com/d3xter666/release-please-monorepo-poc/commit/364349d3eb6239b1ae416c80a8ef22eecd5c3668))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * pckg-c bumped from ^1.0.4 to ^1.0.5
+
+## [1.5.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-d-v1.4.0...pckg-d-v1.5.0) (2025-07-09)
+
+
+### Features
+
+* A new feature for D ([0373080](https://github.com/d3xter666/release-please-monorepo-poc/commit/03730802680af9e18a8ba497e34250a2c50dba26))
+* Another feature ([6918b1c](https://github.com/d3xter666/release-please-monorepo-poc/commit/6918b1c1aba0d834f5bedd3b587c2d9cf75375a2))
+
+
+### Bug Fixes
+
 * Little fix. Nothing more expected ([364349d](https://github.com/d3xter666/release-please-monorepo-poc/commit/364349d3eb6239b1ae416c80a8ef22eecd5c3668))
 
 ## [1.5.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-d-v1.4.0...pckg-d-v1.5.0) (2025-07-09)

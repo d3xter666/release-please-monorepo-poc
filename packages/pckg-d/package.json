@@ -10,6 +10,6 @@
     "test": "echo \"Run tests for pckg-d\""
   },
   "dependencies": {
-    "pckg-c": "^1.0.4"
+    "pckg-c": "^1.0.5"
   }
 }
