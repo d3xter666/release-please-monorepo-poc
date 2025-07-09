@@ -1,0 +1,137 @@
+name: release-please
+
+on:
+  # Manually trigger the release process for a specific package
+  workflow_dispatch:
+    inputs:
+      package-folder:
+        description: "The package to be released"
+        required: true
+        type: choice
+        options:
+          - pckg-a
+          - pckg-b
+          - pckg-c
+          - pckg-d
+  push:
+    # Creates a release & tag when a PR is merged into main
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-24.04
+    outputs:
+      from_pr: ${{steps.pr_check.outputs.from_pr}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check if push is from a merged PR
+        id: pr_check
+        run: |
+          if [[ "$(git log -1 --pretty=%B)" == Merge\ pull\ request* ]]; then
+            echo "from_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "from_pr=false" >> $GITHUB_OUTPUT
+          fi
+  release-pckg-a:
+    needs: check-pr
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release pckg-a
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          path: packages/pckg-a
+
+  release-pckg-b:
+    needs: [check-pr, release-pckg-a]
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-b' ||
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release pckg-b
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          path: packages/pckg-b
+
+  release-pckg-c:
+    needs: [check-pr, release-pckg-b]
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release pckg-c
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          path: packages/pckg-c
+
+  release-pckg-d:
+    needs: [check-pr, release-pckg-c]
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-d')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove devDependencies from package.json
+        run: |
+          cd packages/pckg-d
+          mv package.json package.json.bak
+          node <<- EOM
+            const fs = require("fs");
+            const pkg = JSON.parse(fs.readFileSync("package.json.bak", {encoding: "utf8"}));
+            pkg.devDependencies = {};
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, "\t"), {encoding: "utf8"});
+          EOM
+      - name: Release pckg-d
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          path: packages/pckg-d
+  publish-pckg-a-npm:
+    needs: release-pckg-a
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-a to npm..."
+  publish-pckg-b-npm:
+    needs: release-pckg-b
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-b to npm..."
+  publish-pckg-c-npm:
+    needs: release-pckg-c
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-c to npm..."
+  publish-pckg-d-npm:
+    needs: release-pckg-d
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-d to npm..."
