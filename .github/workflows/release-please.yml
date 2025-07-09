@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       package-folder:
-        description: 'The package to be released'
+        description: "The package to be released"
         required: true
         type: choice
         options:
@@ -26,7 +26,7 @@ jobs:
   check-pr:
     runs-on: ubuntu-24.04
     outputs:
-          from_pr: ${{steps.pr_check.outputs.from_pr}}
+      from_pr: ${{steps.pr_check.outputs.from_pr}}
     steps:
       - uses: actions/checkout@v4
       - name: Check if push is from a merged PR
@@ -39,8 +39,10 @@ jobs:
           fi
   release-pckg-a:
     needs: check-pr
-    if: needs.check-pr.outputs.from_pr == 'true' || 
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-a')
+    if: needs.check-pr.outputs.from_pr == 'true' ||
+      (github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +55,9 @@ jobs:
   release-pckg-b:
     needs: [check-pr, release-pckg-a]
     if: needs.check-pr.outputs.from_pr == 'true' ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-b')
+      (github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-b' ||
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +70,8 @@ jobs:
   release-pckg-c:
     needs: [check-pr, release-pckg-b]
     if: needs.check-pr.outputs.from_pr == 'true' ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-c')
+      (github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
