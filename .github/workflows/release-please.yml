@@ -93,3 +93,35 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-d
+  publish-pckg-a-npm:
+    needs: release-pckg-a
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-a to npm..."
+  publish-pckg-b-npm:
+    needs: release-pckg-b
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-b to npm..."
+  publish-pckg-c-npm:
+    needs: release-pckg-c
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-c to npm..."
+  publish-pckg-d-npm:
+    needs: release-pckg-c
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to NPM
+        run: |
+          echo "Publishing pckg-c to npm..."
