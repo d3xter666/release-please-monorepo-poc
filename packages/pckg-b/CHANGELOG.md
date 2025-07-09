@@ -14,6 +14,13 @@
 
 * Another feature for B ([dede3ae](https://github.com/d3xter666/release-please-monorepo-poc/commit/dede3ae8c5212fb40e6b156eb38f1600c69a5a6c))
 
+## [1.5.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-b-v1.4.0...pckg-b-v1.5.0) (2025-07-09)
+
+
+### Features
+
+* Another feature for B ([dede3ae](https://github.com/d3xter666/release-please-monorepo-poc/commit/dede3ae8c5212fb40e6b156eb38f1600c69a5a6c))
+
 ## [1.4.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-b-v1.3.0...pckg-b-v1.4.0) (2025-07-09)
 
 
