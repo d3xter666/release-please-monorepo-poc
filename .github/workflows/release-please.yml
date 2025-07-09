@@ -118,10 +118,10 @@ jobs:
         run: |
           echo "Publishing pckg-c to npm..."
   publish-pckg-d-npm:
-    needs: release-pckg-c
+    needs: release-pckg-d
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Publish to NPM
         run: |
-          echo "Publishing pckg-c to npm..."
+          echo "Publishing pckg-d to npm..."
