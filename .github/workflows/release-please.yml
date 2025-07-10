@@ -152,7 +152,18 @@ jobs:
 
       - name: Add label to release PR
         if: steps.find_pr.outputs.pr_number != ''
-        uses: peter-evans/add-pr-label@v5
+        uses: actions/github-script@v7
         with:
-          pull-request-number: ${{ steps.find_pr.outputs.pr_number }}
-          labels: ready-for-release
+          script: |
+            const pr = Number('${{ steps.find_pr.outputs.pr_number }}');
+            if (pr) {
+              await github.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr,
+                labels: ['ready-for-release']
+              });
+              console.log(`Label added to PR #${pr}`);
+            } else {
+              console.log('No PR number found.');
+            }
