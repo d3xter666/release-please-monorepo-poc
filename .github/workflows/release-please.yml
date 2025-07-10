@@ -23,20 +23,6 @@ permissions:
   pull-requests: write
 
 jobs:
-  check-pr:
-    runs-on: ubuntu-24.04
-    outputs:
-      from_pr: ${{steps.pr_check.outputs.from_pr}}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check if push is from a merged PR
-        id: pr_check
-        run: |
-          if [[ "$(git log -1 --pretty=%B)" == Merge\ pull\ request* ]]; then
-            echo "from_pr=true" >> $GITHUB_OUTPUT
-          else
-            echo "from_pr=false" >> $GITHUB_OUTPUT
-          fi
   release-pckg-a:
     if: github.event_name == 'workflow_dispatch' &&
       (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
@@ -58,11 +44,10 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-b:
-    needs: [check-pr, release-pckg-a]
-    if: needs.check-pr.outputs.from_pr == 'true' ||
-      (github.event_name == 'workflow_dispatch' &&
+    needs: release-pckg-a
+    if: github.event_name == 'workflow_dispatch' &&
       (github.event.inputs.package-folder == 'pckg-b' ||
-      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -80,10 +65,9 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-c:
-    needs: [check-pr, release-pckg-b]
-    if: needs.check-pr.outputs.from_pr == 'true' ||
-      (github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
+    needs: release-pckg-b
+    if: github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -101,9 +85,8 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-d:
-    needs: [check-pr, release-pckg-c]
-    if: needs.check-pr.outputs.from_pr == 'true' ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-d')
+    needs: release-pckg-c
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-d'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -122,6 +105,22 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-d
+  
+  check-pr:
+    runs-on: ubuntu-24.04
+    outputs:
+      from_pr: ${{steps.pr_check.outputs.from_pr}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check if push is from a merged PR
+        id: pr_check
+        run: |
+          if [[ "$(git log -1 --pretty=%B)" == Merge\ pull\ request* ]]; then
+            echo "from_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "from_pr=false" >> $GITHUB_OUTPUT
+          fi
+  
   publish-packages:
     needs: check-pr
     if: needs.check-pr.outputs.from_pr == 'true'
