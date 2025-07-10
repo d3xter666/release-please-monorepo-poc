@@ -43,6 +43,9 @@ console.log(`Updated ${depName} to ^${latestVersion} in ${pkgName}`);
 
 // Add and commit the change
 try {
+	execSync(`git config --global user.email "you@example.com")`);
+  	execSync(`git config --global user.name "Your Name"`);
+	execSync(`git add ${pkgNameJsonPath}`);
 	execSync(`git add ${pkgNameJsonPath}`);
 	execSync(`git commit -m "chore(${pkgName}): bump version due to ${depName} update"`);
 	console.log('Committed the version bump.');
