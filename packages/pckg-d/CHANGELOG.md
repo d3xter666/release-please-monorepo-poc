@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.2](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-d-v1.6.1...pckg-d-v1.6.2) (2025-07-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * pckg-c bumped from ^1.0.7 to ^1.0.8
+
 ## [1.6.1](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-d-v1.6.0...pckg-d-v1.6.1) (2025-07-10)
 
 
