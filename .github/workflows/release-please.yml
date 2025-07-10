@@ -19,7 +19,7 @@ jobs:
   release-please:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
       - name: Release Please Checks
         uses: googleapis/release-please-action@v4
         with:
