@@ -14,6 +14,13 @@
 
 * Package A ([e773e45](https://github.com/d3xter666/release-please-monorepo-poc/commit/e773e452defd86b39cef8f11b15f851f368f5d81))
 
+## [1.3.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.2.0...pckg-a-v1.3.0) (2025-07-10)
+
+
+### Features
+
+* Package A ([e773e45](https://github.com/d3xter666/release-please-monorepo-poc/commit/e773e452defd86b39cef8f11b15f851f368f5d81))
+
 ## [1.2.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.1.2...pckg-a-v1.2.0) (2025-07-09)
 
 
