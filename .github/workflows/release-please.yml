@@ -53,9 +53,9 @@ jobs:
           path: packages/pckg-a
       - name: Update deps
         run: |
-          node scripts/update-deps.js pckg-b pckg-a
-          node scripts/update-deps.js pckg-c pckg-b
-          node scripts/update-deps.js pckg-d pckg-c
+          node scripts/update-dep-version.js pckg-b pckg-a
+          node scripts/update-dep-version.js pckg-c pckg-b
+          node scripts/update-dep-version.js pckg-d pckg-c
       - name: Create PRs for version Bumps
         uses: googleapis/release-please-action@v4
         with:
