@@ -26,6 +26,7 @@ try {
 const pkg = JSON.parse(fs.readFileSync(pkgNameJsonPath, 'utf8'));
 let updated = false;
 if (pkg.dependencies && pkg.dependencies[depName]) {
+	// TODO: Do not update if already modified in PR
 	pkg.dependencies[depName] = `^${latestVersion}`;
 	// Bump patch version
 	const [major, minor, patch] = pkg.version.split('.').map(Number);

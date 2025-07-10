@@ -24,9 +24,7 @@ permissions:
 
 jobs:
   release-pckg-a:
-    if: github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
-      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-a'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -44,10 +42,8 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-b:
-    needs: release-pckg-a
     if: github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-b' ||
-      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
+      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +63,8 @@ jobs:
   release-pckg-c:
     needs: release-pckg-b
     if: github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
+      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
+      github.event.inputs.package-folder == 'pckg-c')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +83,9 @@ jobs:
 
   release-pckg-d:
     needs: release-pckg-c
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-d'
+    if: github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -121,7 +120,7 @@ jobs:
             echo "from_pr=false" >> $GITHUB_OUTPUT
           fi
   
-  publish-packages:
+  publish-package:
     needs: check-pr
     if: needs.check-pr.outputs.from_pr == 'true'
     runs-on: ubuntu-24.04
