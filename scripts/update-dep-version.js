@@ -46,7 +46,7 @@ try {
 	execSync(`git config --global user.email "you@example.com"`);
   	execSync(`git config --global user.name "Your Name"`);
 	execSync(`git add ${pkgNameJsonPath}`);
-	execSync(`git commit -m "chore(${pkgName}): bump version due to ${depName} update"`);
+	execSync(`git commit -m "deps(${pkgName}): Bump version due to ${depName} update"`);
 	console.log('Committed the version bump.');
 } catch (err) {
 	console.error('Failed to commit changes:', err.message);
