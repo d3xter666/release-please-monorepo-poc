@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.1.0...pckg-a-v1.1.1) (2025-07-10)
+
+
+### Bug Fixes
+
+* Try to fix only pckg-a and bump versions of the other components ([2870c2d](https://github.com/d3xter666/release-please-monorepo-poc/commit/2870c2dc946df84994e55ef01c316aa86f1648d5))
+
 ## [1.1.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.0.0...pckg-a-v1.1.0) (2025-07-10)
 
 
