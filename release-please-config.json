@@ -1,5 +1,22 @@
 {
-	"plugins": ["node-workspace"],
+	"plugins": [
+		[
+			"node-workspace",
+			{
+				"packages": [
+					"packages/pckg-a",
+					"packages/pckg-b",
+					"packages/pckg-c",
+					"packages/pckg-d"
+				],
+				"workspaces": [
+					"packages/*"
+				],
+				"updateInternalDependencies": true,
+				"linkWorkspaceVersion": false
+			}
+		]
+	],
 	"packages": {
 		"packages/pckg-a": {},
 		"packages/pckg-b": {},
