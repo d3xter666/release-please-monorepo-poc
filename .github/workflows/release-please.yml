@@ -42,6 +42,7 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-b:
+    needs: release-pckg-a
     if: github.event_name == 'workflow_dispatch' &&
       (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b')
     runs-on: ubuntu-24.04
