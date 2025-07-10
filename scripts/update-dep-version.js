@@ -1,11 +1,12 @@
-// Usage: node scripts/update-dep-version.js <package-json-path> <dependency-name>
+// Usage: node scripts/update-dep-version.js <package-name> <dependency-name>
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const [, , pkgName, depName] = process.argv;
 
 if (!pkgName || !depName) {
-	console.error('Usage: node scripts/update-dep-version.js <package-json-path> <dependency-name>');
+	console.error('Usage: node scripts/update-dep-version.js <package-name> <dependency-name>');
 	process.exit(1);
 }
 
@@ -27,8 +28,8 @@ let updated = false;
 if (pkg.dependencies && pkg.dependencies[depName]) {
 	pkg.dependencies[depName] = `^${latestVersion}`;
 	// Bump patch version
-    const [major, minor, patch] = pkg.version.split('.').map(Number);
-    pkg.version = [major, minor, patch + 1].join('.');
+	const [major, minor, patch] = pkg.version.split('.').map(Number);
+	pkg.version = [major, minor, patch + 1].join('.');
 	updated = true;
 }
 
@@ -39,3 +40,12 @@ if (!updated) {
 
 fs.writeFileSync(pkgNameJsonPath, JSON.stringify(pkg, null, 2) + '\n');
 console.log(`Updated ${depName} to ^${latestVersion} in ${pkgName}`);
+
+// Add and commit the change
+try {
+	execSync(`git add ${pkgNameJsonPath}`);
+	execSync(`git commit -m "chore(${pkgName}): bump version due to ${depName} update"`);
+	console.log('Committed the version bump.');
+} catch (err) {
+	console.error('Failed to commit changes:', err.message);
+}
