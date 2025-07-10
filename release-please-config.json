@@ -1,5 +1,4 @@
 {
-	"plugins": ["node-workspace"],
 	"packages": {
 		"packages/pckg-a": {},
 		"packages/pckg-b": {},
