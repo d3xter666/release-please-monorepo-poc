@@ -38,11 +38,9 @@ jobs:
             echo "from_pr=false" >> $GITHUB_OUTPUT
           fi
   release-pckg-a:
-    needs: check-pr
-    if: needs.check-pr.outputs.from_pr == 'true' ||
-      (github.event_name == 'workflow_dispatch' &&
+    if: github.event_name == 'workflow_dispatch' &&
       (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
-      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d'))
+      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -54,8 +52,6 @@ jobs:
       - name: Update deps
         run: |
           node scripts/update-dep-version.js pckg-b pckg-a
-          node scripts/update-dep-version.js pckg-c pckg-b
-          node scripts/update-dep-version.js pckg-d pckg-c
       - name: Create PRs for version Bumps
         uses: googleapis/release-please-action@v4
         with:
@@ -75,6 +71,13 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-b
+      - name: Update deps
+        run: |
+          node scripts/update-dep-version.js pckg-c pckg-b
+      - name: Create PRs for version Bumps
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-c:
     needs: [check-pr, release-pckg-b]
@@ -89,6 +92,13 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-c
+      - name: Update deps
+        run: |
+          node scripts/update-dep-version.js pckg-d pckg-c
+      - name: Create PRs for version Bumps
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   release-pckg-d:
     needs: [check-pr, release-pckg-c]
@@ -112,35 +122,38 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-d
-  publish-pckg-a-npm:
-    needs: release-pckg-a
+  publish-packages:
+    needs: check-pr
+    if: needs.check-pr.outputs.from_pr == 'true'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Publish to NPM
+      - name: Get released package from last commit
+        id: get_package
         run: |
-          echo "Publishing pckg-a to npm..."
-  publish-pckg-b-npm:
-    needs: release-pckg-b
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
+          PKG=$(git log -1 --pretty=%B | grep -oE 'release:([a-zA-Z0-9\-]+)' | cut -d: -f2)
+          echo "package=$PKG" >> $GITHUB_OUTPUT
       - name: Publish to NPM
+        # if: steps.get_package.outputs.package != ''
         run: |
-          echo "Publishing pckg-b to npm..."
-  publish-pckg-c-npm:
-    needs: release-pckg-c
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Publish to NPM
+          echo "Publishing package: ${{ steps.get_package.outputs.package }}"
+        #   cd packages/${{ steps.get_package.outputs.package }}
+        #   npm ci
+        #   npm publish --access public
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Find open release PR number
+        id: find_pr
         run: |
-          echo "Publishing pckg-c to npm..."
-  publish-pckg-d-npm:
-    needs: release-pckg-d
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Publish to NPM
-        run: |
-          echo "Publishing pckg-d to npm..."
+          PKG="${{ steps.get_package.outputs.package }}"
+          PR_NUMBER=$(gh pr list --state open --search "release:${PKG} " --json number,title | jq -r '.[] | select(.title | test("^release:'"${PKG}"' v[0-9]+\\.[0-9]+\\.[0-9]+$")) | .number' | head -n1)
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add label to release PR
+        if: steps.find_pr.outputs.pr_number != ''
+        uses: peter-evans/add-pr-label@v5
+        with:
+          pull-request-number: ${{ steps.find_pr.outputs.pr_number }}
+          labels: ready-for-release
