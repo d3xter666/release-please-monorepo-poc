@@ -20,22 +20,22 @@ permissions:
 
 jobs:
   release-pckg-a:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-a'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Release pckg-a
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.package-folder == 'pckg-a'
         uses: googleapis/release-please-action@v4
         id: release_please
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-a
       - name: Update deps
-        if: steps.release_please.outputs.release_created == 'true'
+        if: steps.release_please.outputs.pr != ''
         run: |
           node scripts/update-dep-version.js pckg-b pckg-a
       - name: Create PRs for version Bumps
-        if: steps.release_please.outputs.release_created == 'true'
+        if: steps.release_please.outputs.pr != ''
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
@@ -43,23 +43,23 @@ jobs:
 
   release-pckg-b:
     needs: release-pckg-a
-    if: github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Release pckg-b
+        if: github.event_name == 'workflow_dispatch' &&
+          (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b')
         uses: googleapis/release-please-action@v4
         id: release_please
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-b
       - name: Update deps
-        if: steps.release_please.outputs.release_created == 'true'
+        if: steps.release_please.outputs.pr != ''
         run: |
           node scripts/update-dep-version.js pckg-c pckg-b
       - name: Create PRs for version Bumps
-        if: steps.release_please.outputs.release_created == 'true'
+        if: steps.release_please.outputs.pr != ''
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
@@ -67,24 +67,24 @@ jobs:
 
   release-pckg-c:
     needs: release-pckg-b
-    if: github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
-      github.event.inputs.package-folder == 'pckg-c')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Release pckg-c
+        if: github.event_name == 'workflow_dispatch' &&
+          (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
+          github.event.inputs.package-folder == 'pckg-c')
         uses: googleapis/release-please-action@v4
         id: release_please
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-c
       - name: Update deps
-        if: steps.release_please.outputs.release_created == 'true'
+        if: steps.release_please.outputs.pr != ''
         run: |
           node scripts/update-dep-version.js pckg-d pckg-c
       - name: Create PRs for version Bumps
-        if: steps.release_please.outputs.release_created == 'true'
+        if: steps.release_please.outputs.pr != ''
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
@@ -92,12 +92,12 @@ jobs:
 
   release-pckg-d:
     needs: release-pckg-c
-    if: github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
-      github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
       - name: Release pckg-d
+        if: github.event_name == 'workflow_dispatch' &&
+          (github.event.inputs.package-folder == 'pckg-a' || github.event.inputs.package-folder == 'pckg-b' ||
+          github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
