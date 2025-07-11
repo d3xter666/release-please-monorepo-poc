@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.2.1...pckg-a-v1.3.0) (2025-07-11)
+
+
+### Features
+
+* In A ([369a032](https://github.com/d3xter666/release-please-monorepo-poc/commit/369a0320d4ec24ddd736653ba26bf57439f7f82b))
+
 ## [1.2.1](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-a-v1.2.0...pckg-a-v1.2.1) (2025-07-11)
 
 
