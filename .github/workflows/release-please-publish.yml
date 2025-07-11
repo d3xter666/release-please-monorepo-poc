@@ -77,13 +77,11 @@ jobs:
           done
 
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add label to release PR
         if: steps.find_pr.outputs.pr_number != ''
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           number: ${{ steps.find_pr.outputs.pr_number }}
           labels: ready-for-release
