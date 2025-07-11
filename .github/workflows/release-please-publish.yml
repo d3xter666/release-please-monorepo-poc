@@ -35,7 +35,7 @@ jobs:
       - name: Get released package from last commit
         id: get_package
         run: |
-          PKG=$(git log -1 --pretty=%B | grep -oE 'release:([a-zA-Z0-9\-]+)' | cut -d: -f2)
+          PKG=$(git log -1 --pretty=%B | grep -oE 'release: ([a-zA-Z0-9\-]+)' | cut -d: -f2)
           echo "package=$PKG" >> $GITHUB_OUTPUT
       - name: Publish to NPM
         # if: steps.get_package.outputs.package != ''
@@ -56,7 +56,7 @@ jobs:
         id: find_pr
         run: |
           PKG="${{ steps.get_package.outputs.package }}"
-          PR_NUMBER=$(gh pr list --state open --search "release:${PKG} " --json number,title | jq -r '.[] | select(.title | test("^release:'"${PKG}"' v[0-9]+\\.[0-9]+\\.[0-9]+$")) | .number' | head -n1)
+          PR_NUMBER=$(gh pr list --state open --search "release: ${PKG} " --json number,title | jq -r '.[] | select(.title | test("^release:'"${PKG}"' v[0-9]+\\.[0-9]+\\.[0-9]+$")) | .number' | head -n1)
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
