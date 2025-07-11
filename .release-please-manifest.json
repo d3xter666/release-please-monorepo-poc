@@ -1,6 +1,6 @@
 {
   "packages/pckg-a": "1.3.0",
-  "packages/pckg-b": "1.2.2",
+  "packages/pckg-b": "1.2.3",
   "packages/pckg-c": "1.1.2",
   "packages/pckg-d": "1.1.0"
 }
