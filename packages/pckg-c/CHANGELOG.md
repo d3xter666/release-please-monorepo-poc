@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-c-v1.1.0...pckg-c-v1.1.1) (2025-07-11)
+
+
+### Bug Fixes
+
+* A fix in C ([ddb2cab](https://github.com/d3xter666/release-please-monorepo-poc/commit/ddb2cab0baf6c8659bbc0e1333530abbe69e92ed))
+
+
+### Dependencies
+
+* **pckg-c:** Bump version due to pckg-b update ([81703cf](https://github.com/d3xter666/release-please-monorepo-poc/commit/81703cfa90cbdbf5f80f47a4d153a717328d6e61))
+
 ## [1.1.0](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-c-v1.0.2...pckg-c-v1.1.0) (2025-07-11)
 
 
