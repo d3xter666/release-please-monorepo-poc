@@ -1,4 +1,4 @@
-name: release-please
+name: release-please-create-pr
 
 on:
   # Manually trigger the release process for a specific package
@@ -13,10 +13,6 @@ on:
           - pckg-b
           - pckg-c
           - pckg-d
-  push:
-    # Creates a release & tag when a PR is merged into main
-    branches:
-      - main
 
 permissions:
   contents: write
@@ -89,39 +85,12 @@ jobs:
       github.event.inputs.package-folder == 'pckg-c' || github.event.inputs.package-folder == 'pckg-d')
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - name: Remove devDependencies from package.json
-        run: |
-          cd packages/pckg-d
-          mv package.json package.json.bak
-          node <<- EOM
-            const fs = require("fs");
-            const pkg = JSON.parse(fs.readFileSync("package.json.bak", {encoding: "utf8"}));
-            pkg.devDependencies = {};
-            fs.writeFileSync("package.json", JSON.stringify(pkg, null, "\t"), {encoding: "utf8"});
-          EOM
       - name: Release pckg-d
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           path: packages/pckg-d
-  
-  check-pr:
-    runs-on: ubuntu-24.04
-    outputs:
-      from_pr: ${{steps.pr_check.outputs.from_pr}}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check if push is from a merged PR
-        id: pr_check
-        run: |
-          if [[ "$(git log -1 --pretty=%B)" == Merge\ pull\ request* ]]; then
-            echo "from_pr=true" >> $GITHUB_OUTPUT
-          else
-            echo "from_pr=false" >> $GITHUB_OUTPUT
-          fi
-  
-  publish-package:
+
     needs: check-pr
     if: needs.check-pr.outputs.from_pr == 'true'
     runs-on: ubuntu-24.04

@@ -1,0 +1,80 @@
+name: release-please-publish
+
+on:
+  push:
+    # Creates a release & tag when a PR is merged into main
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-pr-merge:
+    runs-on: ubuntu-24.04
+    outputs:
+      from_pr: ${{steps.pr_check.outputs.from_pr}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check if push is from a merged PR
+        id: pr_check
+        run: |
+          if [[ "$(git log -1 --pretty=%B)" == Merge\ pull\ request* ]]; then
+            echo "from_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "from_pr=false" >> $GITHUB_OUTPUT
+          fi
+  
+  publish-package:
+    needs: check-pr-merge
+    if: needs.check-pr-merge.outputs.from_pr == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get released package from last commit
+        id: get_package
+        run: |
+          PKG=$(git log -1 --pretty=%B | grep -oE 'release:([a-zA-Z0-9\-]+)' | cut -d: -f2)
+          echo "package=$PKG" >> $GITHUB_OUTPUT
+      - name: Publish to NPM
+        # if: steps.get_package.outputs.package != ''
+        run: |
+          echo "Publishing package: ${{ steps.get_package.outputs.package }}"
+        #   cd packages/${{ steps.get_package.outputs.package }}
+        #   npm ci
+        #   npm publish --access public
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Release/tag the package
+        if: steps.get_package.outputs.package != ''
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          path: packages/${{ steps.get_package.outputs.package }}
+      - name: Find open release PR number
+        id: find_pr
+        run: |
+          PKG="${{ steps.get_package.outputs.package }}"
+          PR_NUMBER=$(gh pr list --state open --search "release:${PKG} " --json number,title | jq -r '.[] | select(.title | test("^release:'"${PKG}"' v[0-9]+\\.[0-9]+\\.[0-9]+$")) | .number' | head -n1)
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add label to release PR
+        if: steps.find_pr.outputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = Number('${{ steps.find_pr.outputs.pr_number }}');
+            if (pr) {
+              await github.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr,
+                labels: ['ready-for-release']
+              });
+              console.log(`Label added to PR #${pr}`);
+            } else {
+              console.log('No PR number found.');
+            }
