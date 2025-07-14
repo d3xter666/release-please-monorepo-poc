@@ -87,3 +87,7 @@ jobs:
           github_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           number: ${{ steps.find_pr.outputs.pr_number }}
           labels: ready-for-release
+      # - name: Merge PR
+      #   run: gh pr merge ${{ steps.find_pr.outputs.pr_number }} --squash --admin
+      #   env:
+      #     GH_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
