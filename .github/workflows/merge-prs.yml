@@ -106,15 +106,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add label to release PR
-        if: steps.merge_pr.outputs.merged_pkg != '' &&
-          steps.find_pr.outputs.pr_number != ''
-        uses: actions-ecosystem/action-add-labels@v1
-        with:
-          github_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          number: ${{ steps.find_pr.outputs.pr_number }}
-          labels: ready-for-release
-      # - name: Merge PR and continue the automation
-      #   run: gh pr merge ${{ steps.find_pr.outputs.pr_number }} --squash --admin
-      #   env:
-      #     GH_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+      - name: Trigger next workflow_dispatch with same selection
+        run: |
+          gh workflow run merge-prs.yml \
+            --ref main \
+            -f pckg-a="${{ github.event.inputs.pckg-a }}" \
+            -f pckg-b="${{ github.event.inputs.pckg-b }}" \
+            -f pckg-c="${{ github.event.inputs.pckg-c }}" \
+            -f pckg-d="${{ github.event.inputs.pckg-d }}"
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
