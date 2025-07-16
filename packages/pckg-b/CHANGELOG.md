@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.3](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-b-v1.2.2...pckg-b-v1.2.3) (2025-07-16)
+
+
+### Dependencies
+
+* **pckg-b:** Bump version due to pckg-a update ([17fce62](https://github.com/d3xter666/release-please-monorepo-poc/commit/17fce626b604ff88ba743de6da97594e46d09ec5))
+* **pckg-b:** Bump version due to pckg-a update ([02aadde](https://github.com/d3xter666/release-please-monorepo-poc/commit/02aadded49541004ebaccf0f74fe22354797f38f))
+* **pckg-b:** Bump version due to pckg-a update ([8275602](https://github.com/d3xter666/release-please-monorepo-poc/commit/82756022b08cd85b7002c2c8fb9193ac42a80687))
+
 ## [1.2.2](https://github.com/d3xter666/release-please-monorepo-poc/compare/pckg-b-v1.2.1...pckg-b-v1.2.2) (2025-07-11)
 
 
