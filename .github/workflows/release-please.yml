@@ -1,0 +1,129 @@
+name: release-please-create-pr
+
+on:
+  # Manually trigger the release process for a specific package
+  workflow_dispatch:
+    inputs:
+      pckg-a:
+        description: "Release pckg-a"
+        required: false
+        type: boolean
+      pckg-b:
+        description: "Release pckg-b"
+        required: false
+        type: boolean
+      pckg-c:
+        description: "Release pckg-c"
+        required: false
+        type: boolean
+      pckg-d:
+        description: "Release pckg-d"
+        default: true
+        required: false
+        type: boolean
+
+  push:
+    # Creates a release & tag when a PR is merged into main
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-packages:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create PRs for packages
+        uses: googleapis/release-please-action@v4
+        id: release_please
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+      - name: Check if push is from a merged PR
+        id: pr_check
+        run: |
+          if [[ "$(git log -1 --pretty=%B)" == Merge\ pull\ request* ]]; then
+            echo "from_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "from_pr=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Publish selected packages to NPM
+        if: steps.pr_check.outputs.from_pr == 'true'
+        # env:
+        #   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for pkg in pckg-a pckg-b pckg-c pckg-d; do
+            selected="${{ github.event.inputs[pkg] }}"
+            if [ "$selected" = "true" ]; then
+              echo "Publishing $pkg to NPM..."
+              cd packages/$pkg
+              echo "Current directory: $(pwd)"
+              # echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+              # npm ci
+              # npm publish --access public
+              cd ../..
+            fi
+          done
+      - name: Always update deps in pckg-d
+        if: steps.pr_check.outputs.from_pr == 'true'
+        run: |
+          for pkg in pckg-a pckg-b pckg-c; do
+            selected="${{ github.event.inputs[$pkg] }}"
+            if [ "$selected" = "true" ]; then
+              echo "Updating $pkg to depend on pckg-d..."
+              node scripts/update-dep-version.js $pkg pckg-d
+            fi
+          done
+      - name: Update open PRs
+        if: steps.pr_check.outputs.from_pr == 'true'
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+      - name: Get released package from last commit
+        if: steps.pr_check.outputs.from_pr == 'true'
+        id: get_package
+        run: |
+          PKG=$(git log -1 --pretty=%B | grep -oE 'release: ([a-zA-Z0-9\-]+)' | cut -d: -f2)
+          echo "package=$PKG" >> $GITHUB_OUTPUT
+      - name: Find open release PR number for next package
+        if: steps.pr_check.outputs.from_pr == 'true'
+        id: find_pr
+        run: |
+          ORDER=("pckg-a" "pckg-b" "pckg-c" "pckg-d")
+          CUR="${{ steps.get_package.outputs.package }}"
+          # Find the index of the current package
+          for i in "${!ORDER[@]}"; do
+            if [[ "${ORDER[$i]}" == "$CUR" ]]; then
+              CUR_IDX=$i
+              break
+            fi
+          done
+
+          PR_NUMBER=""
+          # Search for open PRs for the next packages in order
+          for ((j=CUR_IDX+1; j<${#ORDER[@]}; j++)); do
+            NEXT_PKG="${ORDER[$j]}"
+            PR_NUMBER=$(gh pr list --state open --search "release: ${NEXT_PKG}" --json number,title | jq -r --arg pkg "$NEXT_PKG" '.[] | select(.title | test("^release: \($pkg) v[0-9]+\\.[0-9]+\\.[0-9]+$")) | .number'| head -n1)
+            if [[ -n "$PR_NUMBER" ]]; then
+              echo "Found open PR #$PR_NUMBER for $NEXT_PKG"
+              break
+            fi
+          done
+
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add label to release PR
+        if: steps.pr_check.outputs.from_pr == 'true' && steps.find_pr.outputs.pr_number != ''
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          number: ${{ steps.find_pr.outputs.pr_number }}
+          labels: ready-for-release
+      # - name: Merge PR and continue the automation
+      #   run: gh pr merge ${{ steps.find_pr.outputs.pr_number }} --squash --admin
+      #   env:
+      #     GH_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
