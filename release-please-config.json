@@ -28,6 +28,11 @@
 			"section": "Dependencies"
 		},
 		{
+			"type": "bump",
+			"section": "Internal Version Bumps",
+			"hidden": true
+		},
+		{
 			"type": "revert",
 			"section": "Reverts"
 		},
