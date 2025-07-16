@@ -107,6 +107,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger next workflow_dispatch with same selection
+        if: steps.merge_pr.outputs.merged_pkg != ''
         run: |
           gh workflow run merge-prs.yml \
             --ref main \
